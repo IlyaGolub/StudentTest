@@ -35,9 +35,10 @@ namespace StudentsTest.Infrastructure
             return current;
         }
 
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
             context.Set<T>().Remove(entity);
+            await SaveAsync();
         }
 
         public void DeleteRange(IEnumerable<T> entitys)

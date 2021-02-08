@@ -9,7 +9,7 @@ namespace StudentsTest.Infrastructure
         DbSet<T> All();
         Task<T> Add(T entity);
         Task<T> Update(T current);
-        void Delete(T entity);
+        Task Delete(T entity);
         void DeleteRange(IEnumerable<T> entitys);
         void AddRange(IEnumerable<T> entitys);
         Task SaveAsync();

@@ -46,7 +46,7 @@ namespace StudentsTest.Services
         public async Task DeleteStudent(int id)
         {
             var student = await repository.All().FirstOrDefaultAsync(x => x.Id == id);
-            repository.Delete(student);
+            await repository.Delete(student);
         }
         private async Task<Student> CreateStudent(StudentDTO studentDTO)
         {           
