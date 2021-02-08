@@ -1,7 +1,8 @@
-﻿using StudentsTest.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentsTest.Entities;
 using StudentsTest.Infrastructure;
 using System.Collections.Generic;
-using System.Data.Entity;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace StudentsTest.Services
 
         }
 
-        public async Task SetStudent(StudentDTO studentDTO)
+        public async Task<Student> CreateStudent(StudentDTO studentDTO)
         {
 
             var student = new Student
@@ -52,7 +53,8 @@ namespace StudentsTest.Services
                 Progress = GetValue(studentDTO.Rataig)
             };
 
-            await repository.Add(student);
+            var result = await repository.Add(student);
+            return result;
         }
 
         public async Task DeleteStudent(int id)
