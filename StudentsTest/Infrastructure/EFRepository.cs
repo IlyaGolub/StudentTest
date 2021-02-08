@@ -27,9 +27,9 @@ namespace StudentsTest.Infrastructure
             return entity;
         }
 
-        public async Task<T> Update(T prev, T current)
+        public async Task<T> Update(T current)
         {
-            context.Entry<T>(prev).CurrentValues.SetValues(current);
+            context.Update(current);
             await SaveAsync();
 
             return current;

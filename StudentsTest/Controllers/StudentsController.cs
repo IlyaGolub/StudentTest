@@ -72,14 +72,11 @@ namespace StudentsTest.Controllers
         {
             try
             {
-                //if ((await studentService.GetStudentById(student.Id))
-                var result = await studentService.CreateStudent(student);
+                var result = await studentService.CreateOrUpdateStudent(student);
                 return Ok(result);
-
             }
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
         }

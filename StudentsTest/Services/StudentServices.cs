@@ -15,19 +15,15 @@ namespace StudentsTest.Services
 
         private readonly Dictionary<int, string> propgressList;
 
-        public StudentServices()
+        public StudentServices(IRepository<Student> repository)
         {
+            this.repository = repository;
             propgressList = new Dictionary<int, string> {
                 { 2, "Неудовлетворительно"},
                 { 3, "Удовлетворительно"},
                 { 4, "Хорошо"},
                 { 5, "Отлично"}
             };
-        }
-
-        public StudentServices(IRepository<Student> repository)
-        {
-            this.repository = repository;
         }
 
         public async Task<List<Student>> GetAllStudents()
@@ -39,10 +35,21 @@ namespace StudentsTest.Services
             return await repository.All().FirstOrDefaultAsync(x => x.Id == id);
 
         }
-
-        public async Task<Student> CreateStudent(StudentDTO studentDTO)
+        
+        public async Task<Student> CreateOrUpdateStudent(StudentDTO studentDTO)
         {
+            var student = await repository.All().FirstOrDefaultAsync(x => x.Id == studentDTO.Id);
+            if (student == null) return await CreateStudent(studentDTO);
+            else return await UpdateStudent(studentDTO);
+        }      
 
+        public async Task DeleteStudent(int id)
+        {
+            var student = await repository.All().FirstOrDefaultAsync(x => x.Id == id);
+            repository.Delete(student);
+        }
+        private async Task<Student> CreateStudent(StudentDTO studentDTO)
+        {           
             var student = new Student
             {
                 BirthDate = studentDTO.BirthDate,
@@ -57,18 +64,17 @@ namespace StudentsTest.Services
             return result;
         }
 
-        public async Task DeleteStudent(int id)
+        private async Task<Student> UpdateStudent(StudentDTO studentDTO)
         {
-            var student = await repository.All().FirstOrDefaultAsync(x => x.Id == id);
-            repository.Delete(student);
-        }
+            var student = await repository.All().FirstOrDefaultAsync(x => x.Id == studentDTO.Id);
+            student.BirthDate = studentDTO.BirthDate;
+            student.FIO = $"{studentDTO.LastName} {studentDTO.MiddleName} {studentDTO.FirstName}";
+            student.FirstName = studentDTO.FirstName;
+            student.MiddleName = studentDTO.MiddleName;
+            student.LastName = studentDTO.LastName;
+            student.Progress = GetValue(studentDTO.Rataig);
 
-        public void UpdateStudent(Student student)
-        {
-            var OldStudent = repository.All().FirstOrDefault(x => x.Id == student.Id);
-
-            repository.Update(OldStudent, student);
-
+            return await repository.Update(student);
         }
 
         private string GetValue(int rating)
@@ -80,7 +86,6 @@ namespace StudentsTest.Services
             }
             catch
             {
-
                 return null;
             }
 

@@ -6,10 +6,9 @@ namespace StudentsTest.Services
 {
     public interface IStudentServices
     {
-        Task DeleteStudent(int id);
-        Task<Student> CreateStudent(StudentDTO studentDTO);
+        Task DeleteStudent(int id);       
         Task<List<Student>> GetAllStudents();
-        Task<Student> GetStudentById(int id);
-        void UpdateStudent(Student student);
+        Task<Student> GetStudentById(int id);        
+        Task<Student> CreateOrUpdateStudent(StudentDTO studentDTO);
     }
 }
