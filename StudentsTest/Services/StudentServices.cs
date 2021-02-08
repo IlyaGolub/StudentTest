@@ -1,7 +1,7 @@
 ﻿using StudentsTest.Entities;
 using StudentsTest.Infrastructure;
-using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +29,16 @@ namespace StudentsTest.Services
             this.repository = repository;
         }
 
+        public async Task<List<Student>> GetAllStudents()
+        {
+            return await repository.All().ToListAsync();
+        }
+        public async Task<Student> GetStudentById(int id)
+        {
+            return await repository.All().FirstOrDefaultAsync(x => x.Id == id);
+
+        }
+
         public async Task SetStudent(StudentDTO studentDTO)
         {
 
@@ -45,9 +55,18 @@ namespace StudentsTest.Services
             await repository.Add(student);
         }
 
-        public void Deletetudent(Student student)
+        public async Task DeleteStudent(int id)
         {
+            var student = await repository.All().FirstOrDefaultAsync(x => x.Id == id);
             repository.Delete(student);
+        }
+
+        public void UpdateStudent(Student student)
+        {
+            var OldStudent = repository.All().FirstOrDefault(x => x.Id == student.Id);
+
+            repository.Update(OldStudent, student);
+
         }
 
         private string GetValue(int rating)
